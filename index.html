@@ -74,8 +74,7 @@
 
     <script>
 
-      // 1 Вариант - с помощью шаблонной строки      
-
+      // 1 Вариант - с помощью шаблонной строки
       document.getElementById('addFormButton').addEventListener('click', function() {
         const commentsList = document.getElementById("commentsList");
         const button = document.getElementById("addFormButton");
@@ -109,7 +108,8 @@
         const formattedDateNew = formattedDate.replace(',', ''); // Убираем запятую после даты и выводим дату в элемент
 
         // Создаём новый комментарий с помощью шаблонной строки
-        const newComment = `
+        const oldHtml = commentsList.innerHTML;
+        commentsList.innerHTML = oldHtml + `
           <li class="comment">
             <div class="comment-header">
               <div>${inputFormName.value}</div>
@@ -131,15 +131,12 @@
           </li>
         `;
 
-        // Добавляем новый комментарий в контейнер
-        commentsList.insertAdjacentHTML('beforeend', newComment);
         inputFormName.value = "";
         inputFormText.value = "";
       });   
 
 
       // 2 Вариант - с помощью добавления классов
-
       /* document.addEventListener('DOMContentLoaded', function() { 
 
         const buttonAdd = document.getElementById("addFormButton");
