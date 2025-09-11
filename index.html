@@ -8,17 +8,19 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
+      <ul class="comments" id="commentsList">
         <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
             <div>12.02.22 12:18</div>
           </div>
+
           <div class="comment-body">
             <div class="comment-text">
               Это будет первый комментарий на этой странице
             </div>
           </div>
+
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">3</span>
@@ -26,16 +28,19 @@
             </div>
           </div>
         </li>
+
         <li class="comment">
           <div class="comment-header">
             <div>Варвара Н.</div>
             <div>13.02.22 19:22</div>
           </div>
+
           <div class="comment-body">
             <div class="comment-text">
               Мне нравится как оформлена эта страница! ❤
             </div>
           </div>
+
           <div class="comment-footer">
             <div class="likes">
               <span class="likes-counter">75</span>
@@ -44,11 +49,13 @@
           </div>
         </li>
       </ul>
+
       <div class="add-form">
         <input
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
+          id="addFormName"
         />
 
         <textarea
@@ -56,14 +63,169 @@
           class="add-form-text"
           placeholder="Введите ваш коментарий"
           rows="4"
+          id="addFormText"
         ></textarea>
-        
+
         <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+          <button class="add-form-button" id="addFormButton" type="button">Написать</button>
         </div>
       </div>
     </div>
+
+    <script>
+
+      // 1 Вариант - с помощью шаблонной строки      
+
+      document.getElementById('addFormButton').addEventListener('click', function() {
+        const commentsList = document.getElementById("commentsList");
+        const button = document.getElementById("addFormButton");
+        const inputFormName = document.getElementById("addFormName");
+        const inputFormText = document.getElementById("addFormText");
+
+        // Валидация полей
+        inputFormName.classList.remove("error");
+        inputFormText.classList.remove("error");
+        
+        if (inputFormName.value === '') {
+            inputFormName.classList.add("error");
+            return;
+
+        } else if (inputFormText.value === '') {
+            inputFormText.classList.add("error");
+            return;
+        }
+        
+        const dateElement = new Date().toLocaleString(); // Находим элемент, в который будет выводиться дата
+
+        const options = {
+          year: '2-digit', // Указываем, что год должен отображаться двумя цифрами
+          month: '2-digit', // Указываем, что месяц должен отображаться двумя цифрами
+          day: '2-digit', // Указываем, что день должен отображаться двумя цифрами
+          hour: '2-digit', // Указываем, что часы должны отображаться двумя цифрами
+          minute: '2-digit', // Указываем, что минуты должны отображаться двумя цифрами
+        };
+
+        const formattedDate = new Date().toLocaleString('ru-RU', options); // Форматируем дату и выводим её в элемент
+        const formattedDateNew = formattedDate.replace(',', ''); // Убираем запятую после даты и выводим дату в элемент
+
+        // Создаём новый комментарий с помощью шаблонной строки
+        const newComment = `
+          <li class="comment">
+            <div class="comment-header">
+              <div>${inputFormName.value}</div>
+              <div>${formattedDateNew}</div>
+            </div>
+
+            <div class="comment-body">
+              <div class="comment-text">
+                ${inputFormText.value}
+              </div>
+            </div>
+
+            <div class="comment-footer">
+              <div class="likes">
+                <span class="likes-counter">0</span>
+                <button class="like-button"></button>
+              </div>
+            </div>
+          </li>
+        `;
+
+        // Добавляем новый комментарий в контейнер
+        commentsList.insertAdjacentHTML('beforeend', newComment);
+        inputFormName.value = "";
+        inputFormText.value = "";
+      });   
+
+
+      // 2 Вариант - с помощью добавления классов
+
+      /* document.addEventListener('DOMContentLoaded', function() { 
+
+        const buttonAdd = document.getElementById("addFormButton");
+        const commentsList = document.getElementById("commentsList");
+        const inputAddFormName = document.getElementById("addFormName");
+        const inputAddFormText = document.getElementById("addFormText");
+
+        addFormButton.addEventListener('click', function() {
+          const name = addFormName.value;
+          const commentText = addFormText.value;
+
+          if (name && commentText) {
+            const allComment = document.createElement('ul');
+            allComment.classList.add('comments');
+
+            const newComment = document.createElement('li');
+            newComment.classList.add('comment');
+
+            const header = document.createElement('div');
+            header.classList.add('comment-header');
+
+            const nameElement = document.createElement('div');
+            nameElement.classList.add('comment-name');
+            nameElement.textContent = name;
+
+            const dateElement = document.createElement('div');
+            dateElement.classList.add('comment-date');
+            dateElement.textContent = new Date().toLocaleString(); // Получаем элемент, в который будет выводиться дата
+
+            const options = {
+              year: '2-digit', // Указываем, что год должен отображаться двумя цифрами
+              month: '2-digit', // Указываем, что месяц должен отображаться двумя цифрами
+              day: '2-digit', // Указываем, что день должен отображаться двумя цифрами
+              hour: '2-digit', // Указываем, что часы должны отображаться двумя цифрами
+              minute: '2-digit', // Указываем, что минуты должны отображаться двумя цифрами
+            };
+
+            const formattedDate = new Date().toLocaleString('ru-RU', options); // Форматируем дату и выводим её в элемент
+            dateElement.textContent = formattedDate.replace(',', ''); // Убираем запятую после даты и выводим дату в элемент
+
+            header.appendChild(nameElement);
+            header.appendChild(dateElement);
+
+            const contentBody = document.createElement('div');
+            contentBody.classList.add('comment-body');
+
+            const content = document.createElement('div');
+            content.classList.add('comment-text');
+            content.textContent = commentText;
+
+            contentBody.appendChild(content);
+
+            const footer = document.createElement('div');
+            footer.classList.add('comment-footer');
+
+            const likes = document.createElement('div');
+            likes.classList.add('likes');
+
+            const likesCount = document.createElement('span');
+            likesCount.classList.add('likes-counter');
+            likesCount.textContent = '0';
+
+            const likeButton = document.createElement('button');
+            likeButton.classList.add('like-button');
+
+            footer.appendChild(likes);
+            likes.appendChild(likesCount);
+            likes.appendChild(likeButton);
+
+            allComment.appendChild(newComment);
+            newComment.appendChild(header);
+            newComment.appendChild(contentBody);
+            newComment.appendChild(footer);
+
+            commentsList.appendChild(newComment);
+
+            addFormName.value = '';
+            addFormText.value = ''; // Очищаем поля ввода после добавления комментария
+          }
+        });
+      });
+ */
+
+    </script>
   </body>
+  
 
   <script>
     "use strict";
