@@ -10,48 +10,6 @@
 <body>
   <div class="container">
     <ul class="comments" id="commentsList">
-
-      <!-- Первый комментарий -->
-      <li class="comment">
-        <div class="comment-header">
-          <div>Глеб Фокин</div>
-          <div>12.02.22 12:18</div>
-        </div>
-
-        <div class="comment-body">
-          <div class="comment-text">
-            Это будет первый комментарий на этой странице
-          </div>
-        </div>
-
-        <div class="comment-footer">
-          <div class="like">
-            <span class="like-counter">3</span>
-            <button class="like-button" onclick="toggleLike(this)"></button>
-          </div>
-        </div>
-      </li>
-
-      <!-- Второй комментарий -->
-      <li class="comment">
-        <div class="comment-header">
-          <div>Варвара Н.</div>
-          <div>13.02.22 19:22</div>
-        </div>
-
-        <div class="comment-body">
-          <div class="comment-text">
-            Мне нравится как оформлена эта страница! ❤
-          </div>
-        </div>
-
-        <div class="comment-footer">
-          <div class="like">
-            <span class="like-counter">74</span>
-            <button class="like-button" onclick="toggleLike(this)"></button>
-          </div>
-        </div>
-      </li>
     </ul>
 
     <!-- Форма отправки комментария -->
@@ -67,9 +25,61 @@
     </div>
   </div>
 
-
-
   <script>
+    let comments = [
+      {
+        name: 'Глеб Фокин',
+        date: '12.02.22 12:18',
+        text: 'Это будет первый комментарий на этой странице',
+        likes: 3,
+        isLiked: false,
+      },
+      {
+        name: 'Варвара Н.',
+        date: '13.02.22 19:22',
+        text: 'Мне нравится как оформлена эта страница! ❤',
+        likes: 75,
+        isLiked: true,
+      },
+    ];
+
+    function renderComments() {
+      const commentsList = document.getElementById("commentsList");
+
+      // Очищаем список комментариев перед перерисовкой
+      commentsList.innerHTML = "";
+
+      comments.forEach((comment, index) => {
+        const commentElement = document.createElement("li");
+        commentElement.classList.add("comment");
+
+        commentElement.innerHTML = `
+            <div class="comment-header">
+              <div>${comment.name}</div>
+              <div>${comment.date}</div>
+            </div>
+            <div class="comment-body">
+              <div class="comment-text">
+                ${comment.text}
+              </div>
+            </div>
+            <div class="comment-footer">
+              <div class="like">
+                <span class="like-counter">${comment.likes}</span>
+                <button class="like-button ${comment.isLiked ? 'liked' : ''}" data-index="${index}"></button>
+              </div>
+            </div>
+          `;
+        commentsList.appendChild(commentElement);
+      });
+
+      // Добавляем обработчики клика на кнопки лайков после отрисовки
+      document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', likeComment);
+      });
+    }
+
+    // Функция для добавления нового комментария
     document.getElementById('addFormButton').addEventListener('click', function () {
       const commentsList = document.getElementById("commentsList");
       const button = document.getElementById("addFormButton");
@@ -105,59 +115,39 @@
       };
 
       const formattedDate = new Date().toLocaleString('ru-RU', options); // Форматируем дату и выводим её в элемент
-      const formattedDateNew = formattedDate.replace(',',''); // Убираем запятую после даты и выводим дату в элемент
+      const formattedDateNew = formattedDate.replace(',', ''); // Убираем запятую после даты и выводим дату в элемент
 
-      // Создаём новый комментарий с помощью шаблонной строки
-      const oldHtml = commentsList.innerHTML;
-      commentsList.innerHTML = oldHtml + `
-          <li class="comment">
-            <div class="comment-header">
-              <div>${inputFormName.value}</div>
-              <div>${formattedDateNew}</div>
-            </div>
-
-            <div class="comment-body">
-              <div class="comment-text">
-                ${inputFormText.value}
-              </div>
-            </div>
-
-            <div class="comment-footer">
-              <div class="like">
-                <span class="like-counter">0</span>
-                <button class="like-button" onclick="toggleLike(this)"></button>
-              </div>
-            </div>
-          </li>
-        `;
+      // Создаём новый комментарий
+      comments.push({
+        name: inputFormName.value,
+        date: formattedDateNew,
+        text: inputFormText.value,
+        likes: 0,
+        isLiked: false,
+      });
 
       inputFormName.value = "";
       inputFormText.value = "";
+
+      // Перерисовываем комментарии
+      renderComments();
     });
 
+    function likeComment() {
+      const index = this.dataset.index;
+      if (comments[index].isLiked === false) {
+        comments[index].likes++;
+        comments[index].isLiked = true;
+      } else {
+        comments[index].likes--;
+        comments[index].isLiked = false;
+      }
+      renderComments();
+    };
 
-    //Счетчик лайков
-    function toggleLike(button) {
-        const container = button.closest('.like');
-        const likeButton = container.querySelector('.like-button');
-        const count = container.querySelector('.like-counter');
-
-        if (likeButton.classList.contains('liked')) {
-            likeButton.classList.remove('liked');
-            count.textContent = parseInt(count.textContent) - 1;
-        } else {
-            likeButton.classList.add('liked');
-            count.textContent = parseInt(count.textContent) + 1;
-        }
-    }
+    // При загрузке страницы отрисовываем комментарии
+    renderComments();
   </script>
 </body>
-
-
-<script>
-  "use strict";
-  // Код писать здесь
-  console.log("It works!");
-</script>
 
 </html>
