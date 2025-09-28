@@ -14,9 +14,9 @@
 
     <!-- Форма отправки комментария -->
     <div class="add-form">
-      <input type="text" class="add-form-name" placeholder="Введите ваше имя" id="addFormName" />
+      <input class="add-form-name" type="text" placeholder="Введите ваше имя" id="addFormName" />
 
-      <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"
+      <textarea class="add-form-text" type="textarea" placeholder="Введите ваш коментарий" rows="4"
         id="addFormText"></textarea>
 
       <div class="add-form-row">
@@ -34,6 +34,7 @@
         likes: 3,
         isLiked: false,
       },
+
       {
         name: 'Варвара Н.',
         date: '13.02.22 19:22',
@@ -43,98 +44,58 @@
       },
     ];
 
-    function renderComments() {
-      const commentsList = document.getElementById("commentsList");
+    const commentsList = document.getElementById("commentsList");
+    const addFormName = document.getElementById("addFormName");
+    const addFormText = document.getElementById("addFormText");
+    const addFormButton = document.getElementById("addFormButton");
+    const formatter = new Intl.DateTimeFormat('ru-RU', {
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
-      // Очищаем список комментариев перед перерисовкой
+    // Функция для экранирования опасных символов
+    function safeText(text) {
+      return text.replaceAll('&', '&')
+                 .replaceAll('<', '<')
+                 .replaceAll('>', '>')
+                 .replaceAll('"', '"')
+                 .replaceAll("'", "'");
+    }
+
+    function renderComments() {
       commentsList.innerHTML = "";
 
       comments.forEach((comment, index) => {
         const commentElement = document.createElement("li");
+
         commentElement.classList.add("comment");
+        commentElement.dataset.commentIndex = index; //Добавляем index комментария в data-атрибут
 
         commentElement.innerHTML = `
-            <div class="comment-header">
-              <div>${comment.name}</div>
-              <div>${comment.date}</div>
-            </div>
-            <div class="comment-body">
-              <div class="comment-text">
-                ${comment.text}
-              </div>
-            </div>
-            <div class="comment-footer">
-              <div class="like">
-                <span class="like-counter">${comment.likes}</span>
-                <button class="like-button ${comment.isLiked ? 'liked' : ''}" data-index="${index}"></button>
-              </div>
-            </div>
-          `;
+                <div class="comment-header">
+                  <div>${safeText(comment.name)}</div>
+                  <div>${comment.date}</div>
+                </div>
+                <div class="comment-body">
+                  <div class="comment-text">
+                    ${safeText(comment.text)}
+                  </div>
+                </div>
+                <div class="comment-footer">
+                  <div class="like">
+                    <span class="like-counter">${comment.likes}</span>
+                    <button class="like-button ${comment.isLiked ? 'liked' : ''}" data-index="${index}"></button>
+                  </div>
+                </div>
+              `;
         commentsList.appendChild(commentElement);
-      });
-
-      // Добавляем обработчики клика на кнопки лайков после отрисовки
-      document.querySelectorAll('.like-button').forEach(button => {
-        button.addEventListener('click', likeComment);
       });
     }
 
-    // Функция для добавления нового комментария
-    document.getElementById('addFormButton').addEventListener('click', function () {
-      const commentsList = document.getElementById("commentsList");
-      const button = document.getElementById("addFormButton");
-      const inputFormName = document.getElementById("addFormName");
-      const inputFormText = document.getElementById("addFormText");
-
-      // Валидация полей
-      inputFormName.classList.remove("error");
-      inputFormText.classList.remove("error");
-
-      if (inputFormName.value.trim() === '' || inputFormText.value.trim() === '') {
-
-        // Добавляем класс "error" к полям, которые не прошли проверку
-        if (inputFormName.value.trim() === '') {
-          inputFormName.classList.add("error");
-        }
-
-        if (inputFormText.value.trim() === '') {
-          inputFormText.classList.add("error");
-        }
-
-        return;
-      }
-
-      const dateElement = new Date().toLocaleString(); // Находим элемент, в который будет выводиться дата
-
-      const options = {
-        year: '2-digit', // Указываем, что год должен отображаться двумя цифрами
-        month: '2-digit', // Указываем, что месяц должен отображаться двумя цифрами
-        day: '2-digit', // Указываем, что день должен отображаться двумя цифрами
-        hour: '2-digit', // Указываем, что часы должны отображаться двумя цифрами
-        minute: '2-digit', // Указываем, что минуты должны отображаться двумя цифрами
-      };
-
-      const formattedDate = new Date().toLocaleString('ru-RU', options); // Форматируем дату и выводим её в элемент
-      const formattedDateNew = formattedDate.replace(',', ''); // Убираем запятую после даты и выводим дату в элемент
-
-      // Создаём новый комментарий
-      comments.push({
-        name: inputFormName.value,
-        date: formattedDateNew,
-        text: inputFormText.value,
-        likes: 0,
-        isLiked: false,
-      });
-
-      inputFormName.value = "";
-      inputFormText.value = "";
-
-      // Перерисовываем комментарии
-      renderComments();
-    });
-
-    function likeComment() {
-      const index = this.dataset.index;
+    function likeComment(index) {
       if (comments[index].isLiked === false) {
         comments[index].likes++;
         comments[index].isLiked = true;
@@ -142,11 +103,74 @@
         comments[index].likes--;
         comments[index].isLiked = false;
       }
-      renderComments();
-    };
+    }
 
-    // При загрузке страницы отрисовываем комментарии
+    // Ответ на комментарий
+    function replyToComment(commentIndex) {
+      const comment = comments[commentIndex];
+
+      addFormText.value = `> ${safeText(comment.name)}: "${safeText(comment.text)}"\n ${''}`;  // Заменяем \n на 
+      addFormText.focus();
+    }
+
+    function addComment() {
+
+      addFormName.classList.remove("error");
+      addFormText.classList.remove("error");
+
+      if (!validateForm(addFormName, addFormText)) {
+        return;
+      }
+
+      const newComment = createCommentObject(addFormName.value, addFormText.value);
+      comments.push(newComment);
+
+      addFormName.value = "";
+      addFormText.value = "";
+
+      renderComments();
+    }
+
+    function validateForm(nameInput, textInput) {
+      let isValid = true;
+      if (nameInput.value.trim() === '') {
+        nameInput.classList.add("error");
+        isValid = false;
+      }
+      if (textInput.value.trim() === '') {
+        textInput.classList.add("error");
+        isValid = false;
+      }
+      return isValid;
+    }
+
+    function createCommentObject(name, text) {
+      const formattedDate = formatter.format(new Date());
+      return {
+        name: safeText(name),
+        date: formattedDate,
+        text: safeText(text),
+        likes: 0,
+        isLiked: false,
+      };
+    }
+
+    // Делегирование событий
+    commentsList.addEventListener('click', (event) => {
+      if (event.target.classList.contains('like-button')) {
+        const index = event.target.dataset.index;
+        likeComment(index);
+        renderComments();
+      } else if (event.target.closest('.comment')) {
+        const commentIndex = event.target.closest('.comment').dataset.commentIndex;
+        replyToComment(commentIndex);
+      }
+    });
+
+    addFormButton.addEventListener('click', addComment);
+
     renderComments();
+
   </script>
 </body>
 
