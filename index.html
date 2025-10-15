@@ -1,31 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <title>Проект "Комменты"</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
 
-<head>
-  <title>Проект "Комменты"</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
+    <body>
+        <div class="container">
+            <ul class="comments" id="commentsList"></ul>
 
-<body>
-  <div class="container">
-    <ul class="comments" id="commentsList">
-    </ul>
+            <!-- Форма отправки комментария -->
+            <div class="add-form" id="addForm">
+                <input
+                    class="add-form-name"
+                    type="text"
+                    placeholder="Введите ваше имя"
+                    id="addFormName"
+                />
 
-    <!-- Форма отправки комментария -->
-    <div class="add-form" id="addForm">
-      <input class="add-form-name" type="text" placeholder="Введите ваше имя" id="addFormName" />
+                <textarea
+                    class="add-form-text"
+                    type="textarea"
+                    placeholder="Введите ваш коментарий"
+                    rows="4"
+                    id="addFormText"
+                ></textarea>
 
-      <textarea class="add-form-text" type="textarea" placeholder="Введите ваш коментарий" rows="4"
-        id="addFormText"></textarea>
+                <div class="add-form-row">
+                    <button
+                        class="add-form-button"
+                        id="addFormButton"
+                        type="button"
+                    >
+                        Написать
+                    </button>
+                </div>
+            </div>
+        </div>
 
-      <div class="add-form-row">
-        <button class="add-form-button" id="addFormButton" type="button">Написать</button>
-      </div>
-    </div>
-  </div>
-  
-  <script type="module" src="./modules/index.js"></script>
-</body>
-
+        <script type="module" src="./modules/index.js"></script>
+    </body>
 </html>
