@@ -1,20 +1,6 @@
-// массив существующих комментариев
-export let comments = [
-    {
-    name: 'Глеб Фокин',
-        date: '12.02.22 12:18',
-        text: 'Это будет первый комментарий на этой странице',
-        likes: 3,
-        isLiked: false,
-    },
+export let comments = []
 
-
-
-    {
-        name: 'Варвара Н.',
-        date: '13.02.22 29:22',
-        text: 'Мне нравится как оформлена эта страница! ❤',
-        likes: 75,
-        isLiked: true,
-    },
-]
+// рендер существующих комментариев
+export const updateComments = (newComments) => {
+    comments = newComments
+}
