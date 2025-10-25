@@ -1,25 +1,20 @@
-import { sanitizeHtml } from './utils.js'
-import { formatDate } from './utils.js'
-
-// Функция для создания объекта комментария
-export function createCommentObject(name, text) {
-    const formattedDate = formatDate(new Date())
-    return {
-        name: sanitizeHtml(name),
-        date: formattedDate,
-        text: sanitizeHtml(text),
-        likes: 0,
+// массив существующих комментариев
+export let comments = [
+    {
+    name: 'Глеб Фокин',
+        date: '12.02.22 12:18',
+        text: 'Это будет первый комментарий на этой странице',
+        likes: 3,
         isLiked: false,
-    }
-}
+    },
 
-// Функция лайка комментария
-export function likeComment(comments, index) {
-    if (comments[index].isLiked === false) {
-        comments[index].likes++
-        comments[index].isLiked = true
-    } else {
-        comments[index].likes--
-        comments[index].isLiked = false
-    }
-}
+
+
+    {
+        name: 'Варвара Н.',
+        date: '13.02.22 29:22',
+        text: 'Мне нравится как оформлена эта страница! ❤',
+        likes: 75,
+        isLiked: true,
+    },
+]

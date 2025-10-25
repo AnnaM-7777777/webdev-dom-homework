@@ -8,37 +8,29 @@
 
     <body>
         <div class="container">
-            <ul class="comments" id="commentsList"></ul>
+            <ul class="comments"></ul>
 
             <!-- Форма отправки комментария -->
-            <div class="add-form" id="addForm">
+            <div class="add-form">
                 <input
-                    class="add-form-name"
                     type="text"
+                    class="add-form-name"
                     placeholder="Введите ваше имя"
-                    id="addFormName"
+                    id="name-input"
                 />
-
                 <textarea
-                    class="add-form-text"
                     type="textarea"
+                    class="add-form-text"
                     placeholder="Введите ваш коментарий"
                     rows="4"
-                    id="addFormText"
+                    id="text-input"
                 ></textarea>
-
                 <div class="add-form-row">
-                    <button
-                        class="add-form-button"
-                        id="addFormButton"
-                        type="button"
-                    >
-                        Написать
-                    </button>
+                    <button class="add-form-button">Написать</button>
                 </div>
             </div>
         </div>
 
-        <script type="module" src="./modules/index.js"></script>
+        <script type="module" src="./index.js"></script>
     </body>
 </html>
