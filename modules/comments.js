@@ -1,6 +1,6 @@
 export let comments = []
 
-// рендер существующих комментариев
 export const updateComments = (newComments) => {
-    comments = newComments
-}
+    comments.length = 0;
+    comments.push(...newComments);
+};
