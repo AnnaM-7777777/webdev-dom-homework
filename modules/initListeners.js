@@ -62,14 +62,39 @@ export const initAddCommentListener = (renderComments) => {
         document.querySelector('.form-loading').style.display = 'block'
         document.querySelector('.add-form').style.display = 'none'
 
-        postComments(sanitizeHtml(text.value), sanitizeHtml(name.value)).then((data) => {
-            document.querySelector('.form-loading').style.display = 'none'
-            document.querySelector('.add-form').style.display = 'flex'
+        postComments(sanitizeHtml(text.value), sanitizeHtml(name.value))
+            .then((data) => {
+                document.querySelector('.form-loading').style.display = 'none'
+                document.querySelector('.add-form').style.display = 'flex'
 
-            updateComments(data)
-            renderComments()
-            name.value = ''
-            text.value = ''
-        })
+                updateComments(data)
+                renderComments()
+                name.value = ''
+                text.value = ''
+            })
+            .catch((error) => {
+                document.querySelector('.form-loading').style.display = 'none'
+                document.querySelector('.add-form').style.display = 'flex'
+
+                if (error.message === 'Failed to fetch') {
+                    alert('Кажется, у вас сломался интернет, попробуйте позже')
+                }
+
+                if (error.message === 'Ошибка сервера') {
+                    alert('Сервер сломался, попробуй позже')
+                }
+
+                if (error.message === 'Неверный запрос') {
+                    alert('Имя и комментарий должны быть не короче 3-х символов')
+
+                    name.classList.add('-error')
+                    text.classList.add('-error')
+
+                    setTimeout(() => {
+                        name.classList.remove('-error')
+                        text.classList.remove('-error')
+                    }, 2000)
+                }
+            })
     })
 }
