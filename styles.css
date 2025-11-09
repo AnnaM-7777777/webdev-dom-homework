@@ -100,7 +100,8 @@ body {
     font-family: Helvetica;
     border-radius: 8px;
     border: none;
-    margin-bottom: 12px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .add-form-name {
@@ -157,6 +158,10 @@ body {
 .form-loading {
     display: none;
     margin-top: 20px;
+}
+
+.form-loading-error {
+    color: rgb(255, 83, 83);
 }
 
 .-error {

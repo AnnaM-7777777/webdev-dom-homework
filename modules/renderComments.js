@@ -3,7 +3,6 @@ import { token, name } from './api.js'
 import { initAddCommentListener, initLikeListeners, initReplyListeners } from './initListeners.js'
 import { renderLogin } from './renderLogin.js'
 
-
 export const renderComments = () => {
     const container = document.querySelector('.container')
 
