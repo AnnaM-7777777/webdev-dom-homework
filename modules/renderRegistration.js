@@ -77,7 +77,7 @@ export const renderRegistration = () => {
     const nameError = document.getElementById('nameError')
     const loginError = document.getElementById('loginError')
     const passwordError = document.getElementById('passwordError')
-    const generalLoadingEl = document.querySelector('.form-loading')
+    const generalLoading = document.querySelector('.form-loading')
 
 
     // Функция очистки всех сообщений об ошибках
@@ -85,7 +85,7 @@ export const renderRegistration = () => {
         nameError.textContent = ''
         loginError.textContent = ''
         passwordError.textContent = ''
-        generalLoadingEl.textContent = ''
+        generalLoading.textContent = ''
     }
 
     submitButtonEl.addEventListener('click', async () => {
@@ -129,7 +129,7 @@ export const renderRegistration = () => {
             if (!response.ok) {
                 const errorData = await response.json()
                 const errorMessage = errorData.error || 'Ошибка регистрации на сервере';
-                generalLoadingEl.textContent = `Ошибка: ${errorMessage}`;  // Отобразить ошибку сервера
+                generalLoading.textContent = `Ошибка: ${errorMessage}`;  // Отобразить ошибку сервера
                 throw new Error(errorMessage);
             }
 
@@ -141,7 +141,7 @@ export const renderRegistration = () => {
 
         } catch (error) {
             console.error("Registration failed:", error);
-            generalLoadingEl.textContent = `Ошибка: ${error.message}`
+            generalLoading.textContent = `Ошибка: ${error.message}`
         } finally {
             toggleLoadingState(false);
         }
