@@ -1,6 +1,6 @@
-import { setToken, setName, registration } from './api.js'
-import { renderLogin } from './renderLogin.js'
-import { fetchAddRenderComments } from '../index.js'
+import { setToken, setName, registration } from './api'
+import { renderLogin } from './renderLogin'
+import { fetchAddRenderComments } from '../index'
 
 const toggleLoadingState = (isLoading) => {
     const loadingEl = document.querySelector('.form-loading')
@@ -79,7 +79,6 @@ export const renderRegistration = () => {
     const passwordError = document.getElementById('passwordError')
     const generalLoading = document.querySelector('.form-loading')
 
-
     // Функция очистки всех сообщений об ошибках
     const clearErrors = () => {
         nameError.textContent = ''
@@ -128,9 +127,9 @@ export const renderRegistration = () => {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                const errorMessage = errorData.error || 'Ошибка регистрации на сервере';
-                generalLoading.textContent = `Ошибка: ${errorMessage}`;  // Отобразить ошибку сервера
-                throw new Error(errorMessage);
+                const errorMessage = errorData.error || 'Ошибка регистрации на сервере'
+                generalLoading.textContent = `Ошибка: ${errorMessage}` // Отобразить ошибку сервера
+                throw new Error(errorMessage)
             }
 
             const data = await response.json()
@@ -138,12 +137,11 @@ export const renderRegistration = () => {
             setToken(data.user.token)
             setName(data.user.name)
             fetchAddRenderComments()
-
         } catch (error) {
-            console.error("Registration failed:", error);
+            console.error('Registration failed:', error)
             generalLoading.textContent = `Ошибка: ${error.message}`
         } finally {
-            toggleLoadingState(false);
+            toggleLoadingState(false)
         }
     })
 }

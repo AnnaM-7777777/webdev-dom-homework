@@ -1,13 +1,13 @@
 const host = 'https://wedev-api.sky.pro/api/v2/:AnnaM-7777777'
 const authHost = 'https://wedev-api.sky.pro/api/user' // URL аутентификационного сервера
 
-export let token = ""
+export let token = ''
 
 export const setToken = (newToken) => {
     token = newToken
 }
 
-export let name = ""
+export let name = ''
 
 export const setName = (newName) => {
     name = newName
@@ -22,7 +22,7 @@ export const fetchComments = () => {
             const appComments = responseData.comments.map((comment) => {
                 const date = new Date(comment.date)
 
-                // Функция для форматирования даты
+                // Функция для форматирования даты и времени
                 const formatDate = (date) => {
                     const day = String(date.getDate()).padStart(2, '0')
                     const month = String(date.getMonth() + 1).padStart(2, '0') // Месяцы начинаются с 0
@@ -50,7 +50,7 @@ export const postComments = (text, name) => {
     return fetch(host + '/comments', {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
             text: text,
@@ -77,14 +77,14 @@ export const postComments = (text, name) => {
 
 export const login = (login, password) => {
     return fetch(authHost + '/login', {
-      method: 'POST',
-      body: JSON.stringify({ login: login, password: password}),
-   })
+        method: 'POST',
+        body: JSON.stringify({ login: login, password: password }),
+    })
 }
 
-export const registration = (name, login, password ) => {
+export const registration = (name, login, password) => {
     return fetch(authHost, {
-      method: 'POST',
-      body: JSON.stringify({name: name, login: login, password: password}),
-   })
+        method: 'POST',
+        body: JSON.stringify({ name: name, login: login, password: password }),
+    })
 }

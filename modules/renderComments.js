@@ -1,7 +1,7 @@
-import { comments } from './comments.js'
-import { token, name } from './api.js'
+import { comments } from './comments'
+import { token, name } from './api'
 import { initAddCommentListener, initLikeListeners, initReplyListeners } from './initListeners.js'
-import { renderLogin } from './renderLogin.js'
+import { renderLogin } from './renderLogin'
 
 export const renderComments = () => {
     const container = document.querySelector('.container')
@@ -37,30 +37,30 @@ export const renderComments = () => {
     // добавление новых комментариев через форму
     const addCommentsHtml = `
 
-            <div class="add-form">
-                <input
-                    class="add-form-name"
-                    id="name-input"
-                    type="text"
-                    placeholder="Введите ваше имя"
-                    readonly
-                    value="${name}"
-                />
-                <textarea
-                    type="textarea"
-                    class="add-form-text"
-                    placeholder="Введите ваш коментарий"
-                    rows="4"
-                    id="text-input"
-                ></textarea>
-                <div class="add-form-row">
-                    <button class="add-form-button">Написать</button>
-                </div>
-            </div>
+      <div class="add-form">
+          <input
+              class="add-form-name"
+              id="name-input"
+              type="text"
+              placeholder="Введите ваше имя"
+              readonly
+              value="${name}"
+          />
+          <textarea
+              type="textarea"
+              class="add-form-text"
+              placeholder="Введите ваш коментарий"
+              rows="4"
+              id="text-input"
+          ></textarea>
+          <div class="add-form-row">
+              <button class="add-form-button">Написать</button>
+          </div>
+      </div>
 
-            <div class="form-loading">
-                Комментарий добавляется...
-            </div>`
+      <div class="form-loading">
+          Комментарий добавляется...
+      </div>`
 
     const linkToLoginText = `<p>чтобы отправить комментарий, <span class="link-login">войдите</span></p>`
 

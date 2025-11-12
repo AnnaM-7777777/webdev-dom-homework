@@ -1,6 +1,6 @@
-import { setToken, setName, login } from './api.js'
-import { renderRegistration } from './renderRegistration.js'
-import { fetchAddRenderComments } from '../index.js'
+import { setToken, setName, login } from './api'
+import { renderRegistration } from './renderRegistration'
+import { fetchAddRenderComments } from '../index'
 
 export const renderLogin = () => {
     const container = document.querySelector('.container')
