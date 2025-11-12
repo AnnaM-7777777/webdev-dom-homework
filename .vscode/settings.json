@@ -3,5 +3,6 @@
     "editor.formatOnSave": true,
     "eslint.lintTask.enable": true,
     "eslint.format.enable": true,
-    "eslint.validate": ["javascript"]
+    "eslint.validate": ["javascript"],
+    "compile-hero.disable-compile-files-on-did-save-code": false
 }

@@ -1,5 +1,6 @@
-import { comments } from './comments.js'
-import { sanitizeHtml } from './sanitizeHtml.js'
+import { comments, updateComments } from './comments'
+import { sanitizeHtml } from './sanitizeHtml'
+import { postComments } from './api'
 
 export const initLikeListeners = (renderComments) => {
     // счетчик лайков
@@ -12,9 +13,7 @@ export const initLikeListeners = (renderComments) => {
             const index = likeButton.dataset.index
             const comment = comments[index]
 
-            comment.likes = comment.isLiked
-                ? comment.likes - 1
-                : comment.likes + 1
+            comment.likes = comment.isLiked ? comment.likes - 1 : comment.likes + 1
 
             comment.isLiked = !comment.isLiked
 
@@ -31,44 +30,13 @@ export const initReplyListeners = () => {
     for (const commentElement of commentsElements) {
         commentElement.addEventListener('click', () => {
             const currentComment = comments[commentElement.dataset.index]
-            text.value = `${currentComment.name}: > ${
-                currentComment.text
-            }\n ${''}`
+            text.value = `${currentComment.name}: > ${currentComment.text}\n ${''}`
             text.focus()
         })
     }
 }
 
 export const initAddCommentListener = (renderComments) => {
-    // формат текущей даты и времени
-    function formatDate(date) {
-        const formatter = new Intl.DateTimeFormat('ru-RU', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-        })
-
-        let formattedDate = formatter.format(date)
-
-        // Заменяем запятую на пробел
-        formattedDate = formattedDate.replace(',', '')
-
-        return formattedDate
-    }
-
-    function createCommentObject(name, text) {
-        const formattedDate = formatDate(new Date())
-        return {
-            name: sanitizeHtml(name),
-            date: formattedDate,
-            text: sanitizeHtml(text),
-            likes: 0,
-            isLiked: false,
-        }
-    }
-
     // валидация формы отправки нового комментария
     const name = document.getElementById('name-input')
     const text = document.getElementById('text-input')
@@ -80,13 +48,42 @@ export const initAddCommentListener = (renderComments) => {
             return
         }
 
-        const newComment = createCommentObject(name.value, text.value)
+        document.querySelector('.form-loading').style.display = 'block'
+        document.querySelector('.add-form').style.display = 'none'
 
-        comments.push(newComment)
+        postComments(sanitizeHtml(text.value), sanitizeHtml(name.value))
+            .then((data) => {
+                document.querySelector('.form-loading').style.display = 'none'
+                document.querySelector('.add-form').style.display = 'flex'
 
-        renderComments()
+                updateComments(data)
+                renderComments()
+                name.value = ''
+                text.value = ''
+            })
+            .catch((error) => {
+                document.querySelector('.form-loading').style.display = 'none'
+                document.querySelector('.add-form').style.display = 'flex'
 
-        name.value = ''
-        text.value = ''
+                if (error.message === 'Failed to fetch') {
+                    alert('Кажется, у вас сломался интернет, попробуйте позже')
+                }
+
+                if (error.message === 'Ошибка сервера') {
+                    alert('Сервер сломался, попробуй позже')
+                }
+
+                if (error.message === 'Неверный запрос') {
+                    alert('Имя и комментарий должны быть не короче 3-х символов')
+
+                    name.classList.add('-error')
+                    text.classList.add('-error')
+
+                    setTimeout(() => {
+                        name.classList.remove('-error')
+                        text.classList.remove('-error')
+                    }, 2000)
+                }
+            })
     })
 }
